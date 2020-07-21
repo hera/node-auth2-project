@@ -6,7 +6,6 @@ module.exports = {
 }
 
 function validateCredentials (req, res, next) {
-    console.log(inspector.validate(usersSchema, req.body).valid)
     if (inspector.validate(usersSchema, req.body).valid) {
         next();
     } else {

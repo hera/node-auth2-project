@@ -6,6 +6,7 @@ module.exports = {
     getAll,
     getById,
     add,
+    getByUsername
 };
 
 
@@ -16,6 +17,10 @@ function getAll () {
 
 function getById (id) {
     return db("user").select("id", "username", "department").where({id});
+}
+
+function getByUsername (username) {
+    return db("user").where({username});
 }
 
 
