@@ -1,8 +1,10 @@
 const inspector = require("schema-inspector");
+const jwt = require("jsonwebtoken");
 const usersSchema = require("../users/usersSchema");
 
 module.exports = {
-    validateCredentials
+    validateCredentials,
+    restricted
 }
 
 function validateCredentials (req, res, next) {
@@ -12,6 +14,27 @@ function validateCredentials (req, res, next) {
         res.status(400).json({
             error: "Bad request",
             description: "Please provide valid username and password"
+        });
+    }
+}
+
+function restricted (req, res, next) {
+    const token = req.headers.authorization;
+
+    if (token) {
+        jwt.verify(token, process.env.SECRET, (error, decodedToken) => {
+            if (!error) {
+                req.jwt = decodedToken;
+                next();
+            } else {
+                res.status(403).json({
+                    error: "Access denied. Please log in."
+                });
+            }
+        });
+    } else {
+        res.status(403).json({
+            error: "Access denied. Please log in."
         });
     }
 }

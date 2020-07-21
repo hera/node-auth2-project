@@ -1,9 +1,10 @@
 const express = require("express");
 const userDb = require("./usersModel");
+const { restricted } = require("../auth/authMiddleware");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", restricted, (req, res) => {
     userDb.getAll()
         .then(users => {
             res.status(200).json(users);
